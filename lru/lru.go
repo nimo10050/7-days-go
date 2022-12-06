@@ -16,7 +16,7 @@ type entry struct {
 }
 
 type Value interface {
-	Len() int64
+	Len() int
 }
 
 // New 创建 Cache 对象
@@ -37,13 +37,13 @@ func (c *Cache) Add(key string, value Value) {
 		c.ll.MoveToFront(ele)
 		kv := ele.Value.(*entry)
 		// 重新计算缓存大小
-		c.nBytes = c.nBytes - kv.value.Len() + value.Len()
+		c.nBytes = c.nBytes - int64(kv.value.Len()) + int64(value.Len())
 		kv.value = value
 	} else {
 		// 把元素放到队列的最前面
 		ele := c.ll.PushFront(&entry{key, value})
 		c.cache[key] = ele
-		c.nBytes = c.nBytes + int64(len(key)) + value.Len()
+		c.nBytes = c.nBytes + int64(len(key)) + int64(value.Len())
 	}
 
 	// 触发缓存淘汰
@@ -69,7 +69,7 @@ func (c *Cache) RemoveOldest() {
 		c.ll.Remove(ele)
 		kv := ele.Value.(*entry)
 		delete(c.cache, kv.key)
-		c.nBytes = c.nBytes - int64(len(kv.key)) - kv.value.Len()
+		c.nBytes = c.nBytes - int64(len(kv.key)) - int64(kv.value.Len())
 		if c.onEvicted != nil {
 			c.onEvicted(kv.key, kv.value)
 		}

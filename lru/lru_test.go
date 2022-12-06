@@ -7,8 +7,8 @@ import (
 
 type String string
 
-func (s String) Len() int64 {
-	return int64(len(s))
+func (s String) Len() int {
+	return len(s)
 }
 
 func TestGet(t *testing.T) {
