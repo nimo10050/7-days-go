@@ -1,6 +1,7 @@
 package geecache
 
 import (
+	"fmt"
 	"sync"
 )
 
@@ -29,6 +30,7 @@ func NewGroup(name string, cacheBytes int64, getter Getter) *Group {
 	if getter == nil {
 		panic("nil Getter")
 	}
+	fmt.Println("mu address: ", &mu)
 	mu.Lock()
 	defer mu.Unlock()
 
