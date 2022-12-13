@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"sync"
+	pb "GeeCache/geecachepb"
 )
 
 type Getter interface {
@@ -58,11 +59,17 @@ func GetGroup(name string) *Group {
 }
 
 func (g *Group) getFromPeer(peer PeerGetter, key string) (ByteView, error) {
-	bytes, err := peer.Get(g.name, key)
+	req := &pb.Request{Group: g.name, Key: key}
+	res := &pb.Response{}
+	err := peer.Get(req, res)
 	if err != nil {
 		return ByteView{}, err
 	}
-	return ByteView{b: bytes}, nil
+	//bytes, err := peer.Get(g.name, key)
+	//if err != nil {
+	//	return ByteView{}, err
+	//}
+	return ByteView{b: res.Value}, nil
 }
 
 func (g *Group) load(key string) (v ByteView, err error) {
