@@ -1,11 +1,11 @@
 package geecache
 
 import (
+	pb "GeeCache/geecachepb"
 	"GeeCache/singleflight"
 	"fmt"
 	"log"
 	"sync"
-	pb "GeeCache/geecachepb"
 )
 
 type Getter interface {
